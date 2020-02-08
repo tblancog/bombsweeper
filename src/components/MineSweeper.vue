@@ -51,7 +51,7 @@ export default {
       this.board = this.create2DArray(this.cols, this.rows);
       // Populate bombs ramdomly
       do {
-        // First check if bom has been placed there
+        // First check if bomb has been placed there
         const randCol = this.random(0, this.cols);
         const randRow = this.random(0, this.rows);
 
