@@ -16,12 +16,7 @@
         gridTemplateRows: `repeat(${rows}, 50px)`,
       }"
     > -->
-    <span
-      class="box"
-      style="display: flex;"
-      v-for="(col, idx) in board"
-      v-bind:key="idx"
-    >
+    <span style="display: flex;" v-for="(col, idx) in board" v-bind:key="idx">
       <div class="box" v-for="(item, idx) in col" v-bind:key="idx">
         {{ item }}
       </div>
@@ -57,13 +52,15 @@ export default {
       // Populate bombs ramdomly
       do {
         // First check if bom has been placed there
-        const randomColIndex = this.random(0, this.cols - 1);
-        const randomRowIndex = this.random(0, this.rows - 1);
-        if (this.board[randomColIndex][randomRowIndex] === this.elements.bomb) {
+        const randCol = this.random(0, this.cols);
+        const randRow = this.random(0, this.rows);
+
+        // Validate if bomb has been placed already
+        if (this.board[randCol][randRow] === this.elements.bomb) {
           continue;
         } else {
           // Place bomb
-          this.board[randomColIndex][randomRowIndex] = this.elements.bomb;
+          this.board[randCol][randRow] = this.elements.bomb;
           this.bombs--;
         }
       } while (this.bombs > 0);
@@ -72,6 +69,13 @@ export default {
       let arr = new Array(cols);
       for (let i = 0; i < arr.length; i++) {
         arr[i] = new Array(rows);
+      }
+
+      // Initialize
+      for (let i = 0; i < arr.length; i++) {
+        for (let j = 0; j < arr[i].length; j++) {
+          arr[i][j] = this.elements.empty;
+        }
       }
       return arr;
     },
@@ -99,11 +103,12 @@ body {
 } */
 
 .box {
+  border: 1px solid black;
   display: flex;
   justify-content: center;
   background-color: #fff;
   color: #444;
-  padding: 20px;
-  font-size: 150%;
+  /* padding: 20px;
+  font-size: 150%; */
 }
 </style>
