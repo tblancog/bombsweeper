@@ -1,11 +1,11 @@
 <template>
   <div class="wrapper">
-    <div class="setup" v-if="!gameOver">
+    <div class="setup">
       <div class="input">
         Rows: <input type="text" v-model="rows" /> Cols:
         <input type="text" v-model="cols" />
       </div>
-      <button @click="setUpBoard()" class="btn">
+      <button @click="setup()" class="btn">
         Start game
       </button>
     </div>
@@ -16,16 +16,20 @@
         gridTemplateRows: `repeat(${rows}, 50px)`,
       }"
     > -->
-    <span
+    <!-- <pre>{{ board }}</pre> -->
+    <!-- <span
       class="box"
       style="display: flex;"
-      v-for="(row, rowIndex) in board"
-      v-bind:key="rowIndex"
+      v-for="(item, idx) in board"
+      v-bind:key="idx"
     >
-      <div class="box" v-for="(col, colIndex) in row" v-bind:key="colIndex">
-        {{ col }}
+      <div class="box" v-for="(item, idx) in board" v-bind:key="idx">
+        {{ item }}
       </div>
-    </span>
+    </span> -->
+    <div class="box" v-for="(item, idx) in board" v-bind:key="idx">
+      {{ item }}
+    </div>
   </div>
   <!-- </div> -->
 </template>
@@ -35,13 +39,14 @@ export default {
   data() {
     return {
       board: [
-        [1, 2, 4, 6],
-        [3, 6, 8, 9],
-        [13, 16, 18],
+        [1, 4, 6],
+        [8, 2, 11],
+        [18, 22, 411],
       ],
-      gameOver: false,
+      gameOver: true,
       rows: 5,
-      cols: 5,
+      cols: 4,
+      bombs: 8,
       elements: {
         bomb: '💣',
         empty: '⬜',
@@ -54,8 +59,25 @@ export default {
     },
   },
   methods: {
-    setUpBoard() {
-      return this.rows * this.cols;
+    setup() {
+      this.board = this.setUpBoard(this.cols, this.rows);
+      for (let i = 0; i < this.cols; i++) {
+        for (let j = 0; j < this.rows; j++) {
+          this.board[i][j] = this.getRandomInt(1, 255);
+        }
+      }
+    },
+    setUpBoard(cols, rows) {
+      let arr = new Array(cols);
+      for (let i = 0; i < arr.length; i++) {
+        arr[i] = new Array(rows);
+      }
+      return arr;
+    },
+    getRandomInt(min, max) {
+      min = Math.ceil(min);
+      max = Math.floor(max);
+      return Math.floor(Math.random() * (max - min)) + min;
     },
   },
 };
@@ -65,7 +87,7 @@ export default {
 body {
   margin: 40px;
 }
-.setup {
+.wrapper {
   display: flex;
   justify-content: center;
 }
