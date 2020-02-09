@@ -17,9 +17,14 @@
     </div>
     <!-- </div> -->
     <div v-else>
-      <span style="display: flex;" v-for="(col, idx) in board" v-bind:key="idx">
-        <div class="box" v-for="(item, idx) in col" v-bind:key="idx">
-          {{ item }}
+      <span style="display: flex;" v-for="(col, y) in board" :key="y">
+        <div
+          class="box"
+          v-for="(row, x) in col"
+          :key="x"
+          @click="boxClicked({ x, y })"
+        >
+          {{ row }}
         </div>
       </span>
       <button @click="startedGame = false" class="btn">
@@ -56,6 +61,9 @@ export default {
     },
   },
   methods: {
+    boxClicked(coords) {
+      console.log(coords);
+    },
     startGame() {
       this.setup();
       this.startedGame = true;
@@ -125,6 +133,7 @@ body {
   justify-content: center;
   background-color: #fff;
   color: #444;
+  cursor: pointer;
   /* padding: 20px;
   font-size: 150%; */
 }
