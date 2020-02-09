@@ -1,27 +1,31 @@
 <template>
   <div class="wrapper">
-    <div class="setup">
+    <div class="setup" v-if="!startedGame">
       <div class="input">
-        Rows: <input type="text" v-model="rows" /> Cols:
-        <input type="text" v-model="cols" />
+        <label for="cols">
+          Cols:
+        </label>
+        <input id="cols" type="number" v-model.number="cols" />
+        <label for="rows">
+          Rows:
+        </label>
+        <input id="rows" type="number" v-model.number="rows" />
       </div>
-      <button @click="setup()" class="btn">
+      <button @click="startGame()" class="btn">
         Start game
       </button>
     </div>
-    <!-- <div
-      class="grid"
-      v-bind:style="{
-        gridTemplateColumns: `repeat(${cols}, 50px)`,
-        gridTemplateRows: `repeat(${rows}, 50px)`,
-      }"
-    > -->
-    <span style="display: flex;" v-for="(col, idx) in board" v-bind:key="idx">
-      <div class="box" v-for="(item, idx) in col" v-bind:key="idx">
-        {{ item }}
-      </div>
-    </span>
     <!-- </div> -->
+    <div v-else>
+      <span style="display: flex;" v-for="(col, idx) in board" v-bind:key="idx">
+        <div class="box" v-for="(item, idx) in col" v-bind:key="idx">
+          {{ item }}
+        </div>
+      </span>
+      <button @click="startedGame = false" class="btn">
+        End game
+      </button>
+    </div>
   </div>
 </template>
 <script>
@@ -30,13 +34,19 @@ export default {
   data() {
     return {
       board: [],
-      gameOver: true,
-      rows: 5,
-      cols: 4,
-      bombs: 8,
+      startedGame: false,
+      rows: 10,
+      cols: 10,
+      bombs: 4,
       elements: {
-        bomb: '💣',
-        empty: '⬜',
+        bombs: {
+          emoji: '💣',
+          initial: 8,
+          qqty: 0,
+        },
+        empty: {
+          emoji: '⬜',
+        },
       },
     };
   },
@@ -46,38 +56,45 @@ export default {
     },
   },
   methods: {
+    startGame() {
+      this.setup();
+      this.startedGame = true;
+    },
     setup() {
       // Create an array inside an array to make a grid
-      this.board = this.create2DArray(this.cols, this.rows);
+      this.board = this.create2DArray();
+      this.setEmpty();
       // Populate bombs ramdomly
+      let { emoji, initial, qqty } = this.elements.bombs;
+      qqty = initial;
       do {
-        // First check if bomb has been placed there
         const randCol = this.random(0, this.cols);
         const randRow = this.random(0, this.rows);
 
         // Validate if bomb has been placed already
-        if (this.board[randCol][randRow] === this.elements.bomb) {
+        if (this.board[randCol][randRow] === emoji) {
           continue;
         } else {
           // Place bomb
-          this.board[randCol][randRow] = this.elements.bomb;
-          this.bombs--;
+          this.board[randCol][randRow] = emoji;
+          qqty--;
         }
-      } while (this.bombs > 0);
+      } while (qqty > 0);
     },
-    create2DArray(cols, rows) {
-      let arr = new Array(cols);
+    create2DArray() {
+      let arr = new Array(this.cols);
       for (let i = 0; i < arr.length; i++) {
-        arr[i] = new Array(rows);
-      }
-
-      // Initialize
-      for (let i = 0; i < arr.length; i++) {
-        for (let j = 0; j < arr[i].length; j++) {
-          arr[i][j] = this.elements.empty;
-        }
+        arr[i] = new Array(this.rows);
       }
       return arr;
+    },
+    setEmpty() {
+      // Initialize
+      for (let i = 0; i < this.board.length; i++) {
+        for (let j = 0; j < this.board[i].length; j++) {
+          this.board[i][j] = this.elements.empty.emoji;
+        }
+      }
     },
     random(min, max) {
       min = Math.ceil(min);
