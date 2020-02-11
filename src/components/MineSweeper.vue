@@ -38,11 +38,11 @@ class Cell {
   constructor(cell = {}) {
     this.hidden = cell.hidden;
     this.value = cell.value;
-    (this.icon = cell.icon),
-      (this.coords = {
-        x: cell.x,
-        y: cell.y,
-      });
+    this.icon = cell.icon;
+    this.coords = {
+      x: cell.coords.x,
+      y: cell.coords.y,
+    };
   }
 }
 export default {
@@ -51,12 +51,12 @@ export default {
     return {
       board: [],
       startedGame: false,
-      rows: 10,
-      cols: 10,
+      rows: 4,
+      cols: 4,
       elements: {
         bombs: {
-          initial: 8,
-          qqty: 0,
+          initial: 1,
+          qty: 0,
         },
       },
     };
@@ -74,21 +74,28 @@ export default {
       this.board = this.create2DArray();
       this.setEmpty();
       this.populateBombs();
-      console.log(this.board);
-      // Populate bombs ramdomly
+      let surr = this.getSurroundingCells(this.board[1][2]);
+      this.board[0][1].value = 'a';
+      this.board[0][1].icon = '🙂';
+      this.board[0][2].value = 'b';
+      this.board[0][2].icon = '🧑';
+      console.log(surr);
     },
     populateBombs() {
-      let { initial, qqty } = this.elements.bombs;
-      qqty = initial;
+      // Populate bombs ramdomly
+      let { initial, qty } = this.elements.bombs;
+      qty = initial;
       do {
-        const randCol = this.random(0, this.cols);
-        const randRow = this.random(0, this.rows);
+        // const randCol = this.random(0, this.cols);
+        // const randRow = this.random(0, this.rows);
+        const randCol = 0;
+        const randRow = 3;
 
-        // Validate if bomb has been placed already
+        // Validate if bomb has not been placed already
         let currentCell = this.board[randCol][randRow];
         if (!currentCell.icon.includes('💣')) {
           // Place bomb
-          this.board[randCol][randRow] = {
+          this.board[randCol][randRow] = new Cell({
             hidden: false,
             value: null,
             icon: '💣',
@@ -96,10 +103,10 @@ export default {
               x: randRow,
               y: randCol,
             },
-          };
-          qqty--;
+          });
+          qty--;
         }
-      } while (qqty > 0);
+      } while (qty > 0);
     },
     create2DArray() {
       let arr = new Array(this.cols);
@@ -112,7 +119,6 @@ export default {
       // Initialize every position, first y (columns) and x (rows)
       for (let y = 0; y < this.board.length; y++) {
         for (let x = 0; x < this.board[y].length; x++) {
-          // this.board[i][j] = this.elements.empty.emoji;
           this.board[y][x] = new Cell({
             hidden: false,
             value: null,
@@ -130,7 +136,8 @@ export default {
       max = Math.floor(max);
       return Math.floor(Math.random() * (max - min)) + min;
     },
-    getCellSurroundings(cell, y, x) {
+    getSurroundingCells(cell) {
+      const { y, x } = cell.coords;
       return {
         up: this.getCell(y - 1, x),
         upRight: this.getCell(y - 1, x + 1),
