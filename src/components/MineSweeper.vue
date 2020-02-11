@@ -55,11 +55,16 @@ export default {
       cols: 4,
       elements: {
         bombs: {
-          initial: 1,
+          initial: 3,
           qty: 0,
         },
       },
     };
+  },
+  computed: {
+    bombedCells() {
+      return this.board.filter(col => col.filter(item => item.icon === '💣'));
+    },
   },
   methods: {
     boxClicked(coords) {
@@ -74,22 +79,24 @@ export default {
       this.board = this.create2DArray();
       this.setEmpty();
       this.populateBombs();
-      let surr = this.getSurroundingCells(this.board[1][2]);
-      this.board[0][1].value = 'a';
-      this.board[0][1].icon = '🙂';
-      this.board[0][2].value = 'b';
-      this.board[0][2].icon = '🧑';
-      console.log(surr);
+      // this.board[0][1].value = 0;
+      // this.board[0][1].icon = '🙂';
+      // this.board[0][2].value = 0;
+      // this.board[0][2].icon = '🧑';
+      // this.getSurroundingCells(this.board[1][2]);
+      console.log(this.bombedCells);
+      // this.incSurroundingCells(this.bombedCells);
+      // console.log(surr);
     },
     populateBombs() {
       // Populate bombs ramdomly
       let { initial, qty } = this.elements.bombs;
       qty = initial;
       do {
-        // const randCol = this.random(0, this.cols);
-        // const randRow = this.random(0, this.rows);
-        const randCol = 0;
-        const randRow = 3;
+        const randCol = this.random(0, this.cols);
+        const randRow = this.random(0, this.rows);
+        // const randCol = 0;
+        // const randRow = 3;
 
         // Validate if bomb has not been placed already
         let currentCell = this.board[randCol][randRow];
@@ -121,8 +128,8 @@ export default {
         for (let x = 0; x < this.board[y].length; x++) {
           this.board[y][x] = new Cell({
             hidden: false,
-            value: null,
-            icon: '⬜',
+            value: 0,
+            icon: '',
             coords: {
               x,
               y,
@@ -148,6 +155,18 @@ export default {
         left: this.getCell(y, x - 1),
         upLeft: this.getCell(y - 1, x - 1),
       };
+    },
+    incSurroundingCells(arrayOfCells) {
+      arrayOfCells.forEach(cell => {
+        const cells = this.getSurroundingCells(cell);
+        Object.values(cells).forEach(cell => {
+          const { y, x } = cell.coords;
+          const newValue = cell.value + 1;
+          cell.value = newValue;
+          cell.icon = newValue;
+          this.board[y][x] = cell;
+        });
+      });
     },
     getCell(y, x) {
       let cell;
@@ -190,7 +209,9 @@ body {
   background-color: #fff;
   color: #444;
   cursor: pointer;
-  /* padding: 20px;
-  font-size: 150%; */
+  width: 25px;
+  height: 25px;
+  /* padding: 20px; */
+  font-size: 150%;
 }
 </style>
