@@ -130,7 +130,34 @@ export default {
       max = Math.floor(max);
       return Math.floor(Math.random() * (max - min)) + min;
     },
-    getSurroundings(cell, y, x) {},
+    getCellSurroundings(cell, y, x) {
+      return {
+        up: this.getCell(y - 1, x),
+        upRight: this.getCell(y - 1, x + 1),
+        right: this.getCell(y, x + 1),
+        downRight: this.getCell(y + 1, x + 1),
+        down: this.getCell(y + 1, x),
+        downLeft: this.getCell(y + 1, x - 1),
+        left: this.getCell(y, x - 1),
+        upLeft: this.getCell(y - 1, x - 1),
+      };
+    },
+    getCell(y, x) {
+      let cell;
+      try {
+        cell = this.board[y][x];
+      } catch (e) {
+        console.log(e);
+        cell = null;
+      }
+      return cell;
+    },
+    getCellValue(cell) {
+      return cell.value;
+    },
+    setCellValue(cell, newValue) {
+      cell.value = newValue;
+    },
   },
 };
 </script>
