@@ -6750,7 +6750,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\nbody[data-v-7d03d8ab] {\n  margin: 40px;\n}\n/* .wrapper {\n} */\n/* .grid {\n  display: grid;\n  grid-gap: 5px;\n  background-color: #fff;\n  justify-items: center;\n  justify-content: center;\n} */\n.box[data-v-7d03d8ab] {\n  border: 1px solid black;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  background-color: #fff;\n  color: #444;\n  cursor: pointer;\n  width: 25px;\n  height: 25px;\n  /* padding: 20px; */\n  font-size: 150%;\n}\n.hidden[data-v-7d03d8ab] {\n  background-color: #ddd;\n}\n", ""]);
+exports.push([module.i, "\nbody[data-v-7d03d8ab] {\n  margin: 40px;\n}\n/* .wrapper {\n} */\n/* .grid {\n  display: grid;\n  grid-gap: 5px;\n  background-color: #fff;\n  justify-items: center;\n  justify-content: center;\n} */\n.box[data-v-7d03d8ab] {\n  border: 1px solid black;\n  display: flex;\n  justify-content: center;\n  background-color: #fff;\n  color: #444;\n  cursor: pointer;\n  width: 25px;\n  height: 25px;\n  /* padding: 20px; */\n  font-size: 150%;\n}\n.hidden[data-v-7d03d8ab] {\n  background-color: #ddd;\n}\n", ""]);
 
 // exports
 
@@ -50847,8 +50847,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /home/tony/code/challenge/minesweeper/backend/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /home/tony/code/challenge/minesweeper/backend/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! /home/tony/code/minesweeper-challenge/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /home/tony/code/minesweeper-challenge/resources/sass/app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
