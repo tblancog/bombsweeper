@@ -10,6 +10,10 @@
           Rows:
         </label>
         <input id="rows" type="number" v-model.number="rows" />
+        <label for="cols">
+          Mines:
+        </label>
+        <input id="cols" type="number" v-model.number="elements.bombs.qty" />
       </div>
       <button @click="startGame()" class="btn">
         Start game
@@ -20,12 +24,12 @@
       <div class="statusText">{{ statusText }}</div>
       <span style="display: flex;" v-for="(col, y) in board" :key="y">
         <div
-          class="box"
-          v-for="(row, x) in col"
+          :class="{ box: true, hidden: cell.hidden }"
+          v-for="(cell, x) in col"
           :key="x"
           @click="cellClicked({ x, y })"
         >
-          {{ row.icon }}
+          {{ cell.icon }}
         </div>
       </span>
       <button @click="startedGame = false" class="btn">
@@ -55,8 +59,7 @@ export default {
       cols: 8,
       elements: {
         bombs: {
-          initial: 7,
-          qty: 0,
+          qty: 4,
         },
       },
       startedGame: false,
@@ -85,10 +88,11 @@ export default {
         // reveal all cells
       } else if (this.isEmptyCell(cell)) {
         // reveal selected cell and recursively reveal surrounding empty cells
+        this.revealCell(cell);
       }
-      cell.hidden = true;
-      this.board[y][x] = cell;
-      console.log(this.board[y][x]);
+      // cell.hidden = true;
+      // this.board[y][x] = cell;
+      // console.log(this.board[y][x]);
     },
     startGame() {
       this.setup();
@@ -109,8 +113,7 @@ export default {
     },
     populateBombs() {
       // Populate bombs ramdomly
-      let { initial, qty } = this.elements.bombs;
-      qty = initial;
+      let qty = this.elements.bombs.qty;
       do {
         const randCol = this.random(0, this.cols);
         const randRow = this.random(0, this.rows);
@@ -214,6 +217,23 @@ export default {
     isEmptyCell(cell) {
       return cell.value === 0 && cell.icon.includes('');
     },
+    revealCell(cell) {
+      cell.hidden = false;
+      const { y, x } = cell.coords;
+      this.board[y][x] = cell;
+
+      const cells = this.getSurroundingCells(cell);
+      // console.log(Object.values(cells));
+      // get only those that are not bombs or numbers
+      Object.values(cells)
+        .filter(cell => cell && cell.value === 0 && cell.icon === '')
+        .forEach(cell => {
+          cell.hidden = false;
+          this.board[y][x] = cell;
+          console.log(this.board[y][x]);
+          // this.revealCell(cell);
+        });
+    },
   },
 };
 </script>
@@ -243,5 +263,8 @@ body {
   height: 25px;
   /* padding: 20px; */
   font-size: 150%;
+}
+.hidden {
+  background-color: #ddd;
 }
 </style>
