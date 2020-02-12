@@ -17,12 +17,13 @@
     </div>
     <!-- </div> -->
     <div v-else>
+      <div class="statusText">{{ statusText }}</div>
       <span style="display: flex;" v-for="(col, y) in board" :key="y">
         <div
           class="box"
           v-for="(row, x) in col"
           :key="x"
-          @click="boxClicked({ x, y })"
+          @click="cellClicked({ x, y })"
         >
           {{ row.icon }}
         </div>
@@ -50,7 +51,6 @@ export default {
   data() {
     return {
       board: [],
-      startedGame: false,
       rows: 8,
       cols: 8,
       elements: {
@@ -59,6 +59,8 @@ export default {
           qty: 0,
         },
       },
+      startedGame: false,
+      statusText: '',
     };
   },
   computed: {
@@ -74,8 +76,19 @@ export default {
     },
   },
   methods: {
-    boxClicked(coords) {
-      console.log(coords);
+    cellClicked(coords) {
+      const { y, x } = coords;
+      const cell = this.getCell(y, x);
+      // change state of cell
+      if (this.isCellABomb(cell)) {
+        this.statusText = 'Boom!! You Lost';
+        // reveal all cells
+      } else if (this.isEmptyCell(cell)) {
+        // reveal selected cell and recursively reveal surrounding empty cells
+      }
+      cell.hidden = true;
+      this.board[y][x] = cell;
+      console.log(this.board[y][x]);
     },
     startGame() {
       this.setup();
@@ -194,6 +207,12 @@ export default {
     },
     setCellValue(cell, newValue) {
       cell.value = newValue;
+    },
+    isCellABomb(cell) {
+      return cell.value === null && cell.icon.includes('💣');
+    },
+    isEmptyCell(cell) {
+      return cell.value === 0 && cell.icon.includes('');
     },
   },
 };
