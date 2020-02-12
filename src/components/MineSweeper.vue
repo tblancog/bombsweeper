@@ -51,11 +51,11 @@ export default {
     return {
       board: [],
       startedGame: false,
-      rows: 4,
-      cols: 4,
+      rows: 8,
+      cols: 8,
       elements: {
         bombs: {
-          initial: 3,
+          initial: 7,
           qty: 0,
         },
       },
@@ -91,9 +91,8 @@ export default {
       // this.board[0][2].value = 0;
       // this.board[0][2].icon = '🧑';
       // this.getSurroundingCells(this.board[1][2]);
-      console.log(this.bombedCells);
-      // this.incSurroundingCells(this.bombedCells);
-      // console.log(surr);
+      this.incSurroundingCells(this.bombedCells);
+      console.log(this.board);
     },
     populateBombs() {
       // Populate bombs ramdomly
@@ -164,14 +163,20 @@ export default {
       };
     },
     incSurroundingCells(arrayOfCells) {
+      // console.log(arrayOfCells);
+      // This will increment by one the value of every surrounding cell
       arrayOfCells.forEach(cell => {
         const cells = this.getSurroundingCells(cell);
+        // console.log('getSurroundingCells', cells);
+        // Increment only sorrounding cells if they're neither null nor icon === '💣'
         Object.values(cells).forEach(cell => {
-          const { y, x } = cell.coords;
-          const newValue = cell.value + 1;
-          cell.value = newValue;
-          cell.icon = newValue;
-          this.board[y][x] = cell;
+          if (cell && cell.icon !== '💣') {
+            const { y, x } = cell.coords;
+            const newValue = cell.value + 1;
+            cell.value = newValue;
+            cell.icon = newValue;
+            this.board[y][x] = cell;
+          }
         });
       });
     },
@@ -180,7 +185,6 @@ export default {
       try {
         cell = this.board[y][x];
       } catch (e) {
-        console.log(e);
         cell = null;
       }
       return cell;
