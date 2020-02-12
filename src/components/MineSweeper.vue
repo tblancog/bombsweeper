@@ -63,7 +63,14 @@ export default {
   },
   computed: {
     bombedCells() {
-      return this.board.filter(col => col.filter(item => item.icon === '💣'));
+      let cellsWithBombs = [];
+      this.board.map(col => {
+        cellsWithBombs = [
+          ...cellsWithBombs,
+          ...col.filter(item => item.icon === '💣'),
+        ];
+      });
+      return cellsWithBombs;
     },
   },
   methods: {
