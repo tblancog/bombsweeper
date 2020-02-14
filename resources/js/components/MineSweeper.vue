@@ -83,6 +83,11 @@ export default {
     },
   },
   methods: {
+    startGame() {
+      this.setup();
+      this.gameOver = true;
+      this.statusText = '';
+    },
     cellClicked(coords) {
       const { y, x } = coords;
       const cell = this.getCell(y, x);
@@ -116,11 +121,6 @@ export default {
       }
       this.board[y][x] = cell;
       this.$forceUpdate();
-    },
-    startGame() {
-      this.setup();
-      this.gameOver = true;
-      this.statusText = '';
     },
     setup() {
       // Create an array inside an array to make a grid

@@ -2038,6 +2038,11 @@ var Cell = function Cell() {
     }
   },
   methods: {
+    startGame: function startGame() {
+      this.setup();
+      this.gameOver = true;
+      this.statusText = '';
+    },
     cellClicked: function cellClicked(coords) {
       var y = coords.y,
           x = coords.x;
@@ -2075,11 +2080,6 @@ var Cell = function Cell() {
 
       this.board[y][x] = cell;
       this.$forceUpdate();
-    },
-    startGame: function startGame() {
-      this.setup();
-      this.gameOver = true;
-      this.statusText = '';
     },
     setup: function setup() {
       // Create an array inside an array to make a grid
