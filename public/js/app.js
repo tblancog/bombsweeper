@@ -2029,7 +2029,7 @@ var Cell = function Cell() {
       var cellsWithBombs = [];
       this.board.map(function (col) {
         cellsWithBombs = [].concat(_toConsumableArray(cellsWithBombs), _toConsumableArray(col.filter(function (item) {
-          return item.icon === '💣';
+          return item.value === null;
         })));
       });
       return cellsWithBombs;
@@ -2102,12 +2102,12 @@ var Cell = function Cell() {
 
         var currentCell = this.board[randCol][randRow];
 
-        if (!currentCell.icon.includes('💣')) {
+        if (currentCell.value !== null) {
           // Place bomb
           this.board[randCol][randRow] = new Cell({
-            hidden: false,
+            hidden: true,
             value: null,
-            icon: '💣',
+            icon: '',
             coords: {
               x: randRow,
               y: randCol
@@ -2180,18 +2180,16 @@ var Cell = function Cell() {
       // console.log(arrayOfCells);
       // This will increment by one the value of every surrounding cell
       arrayOfCells.forEach(function (cell) {
-        var cells = _this.getSurroundingCells(cell); // console.log('getSurroundingCells', cells);
-        // Increment only sorrounding cells if they're neither null nor icon === '💣'
+        var cells = _this.getSurroundingCells(cell); // Increment only sorrounding cells if they're neither null
 
 
         Object.values(cells).forEach(function (cell) {
-          if (cell && cell.icon !== '💣') {
+          if (cell && cell.value !== null) {
             var _cell$coords2 = cell.coords,
                 y = _cell$coords2.y,
                 x = _cell$coords2.x;
             var newValue = cell.value + 1;
-            cell.value = newValue; // cell.icon = newValue;
-
+            cell.value = newValue;
             _this.board[y][x] = cell;
           }
         });
@@ -2215,10 +2213,10 @@ var Cell = function Cell() {
       cell.value = newValue;
     },
     isCellABomb: function isCellABomb(cell) {
-      return cell.value === null && cell.icon.includes('💣');
+      return cell.value === null;
     },
     isEmptyCell: function isEmptyCell(cell) {
-      return cell.value === 0 && cell.icon.includes('');
+      return cell.value === 0;
     },
     revealCell: function revealCell(cell) {
       var _this2 = this;

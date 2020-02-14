@@ -74,7 +74,7 @@ export default {
       this.board.map(col => {
         cellsWithBombs = [
           ...cellsWithBombs,
-          ...col.filter(item => item.icon === '💣'),
+          ...col.filter(item => item.value === null),
         ];
       });
       return cellsWithBombs;
@@ -149,12 +149,12 @@ export default {
 
         // Validate if bomb has not been placed already
         let currentCell = this.board[randCol][randRow];
-        if (!currentCell.icon.includes('💣')) {
+        if (currentCell.value !== null) {
           // Place bomb
           this.board[randCol][randRow] = new Cell({
-            hidden: false,
+            hidden: true,
             value: null,
-            icon: '💣',
+            icon: '',
             coords: {
               x: randRow,
               y: randCol,
@@ -223,14 +223,12 @@ export default {
       // This will increment by one the value of every surrounding cell
       arrayOfCells.forEach(cell => {
         const cells = this.getSurroundingCells(cell);
-        // console.log('getSurroundingCells', cells);
-        // Increment only sorrounding cells if they're neither null nor icon === '💣'
+        // Increment only sorrounding cells if they're neither null
         Object.values(cells).forEach(cell => {
-          if (cell && cell.icon !== '💣') {
+          if (cell && cell.value !== null) {
             const { y, x } = cell.coords;
             const newValue = cell.value + 1;
             cell.value = newValue;
-            // cell.icon = newValue;
             this.board[y][x] = cell;
           }
         });
@@ -252,10 +250,10 @@ export default {
       cell.value = newValue;
     },
     isCellABomb(cell) {
-      return cell.value === null && cell.icon.includes('💣');
+      return cell.value === null;
     },
     isEmptyCell(cell) {
-      return cell.value === 0 && cell.icon.includes('');
+      return cell.value === 0;
     },
     revealCell(cell) {
       cell.hidden = false;
