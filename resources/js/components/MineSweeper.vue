@@ -50,13 +50,15 @@ class Cell {
     };
   }
 }
+
+import Axios from 'axios';
 export default {
   name: 'MineSweeper',
   data() {
     return {
       board: [],
-      rows: 8,
-      cols: 8,
+      rows: 10,
+      cols: 10,
       elements: {
         bombs: {
           qty: 4,
@@ -88,11 +90,13 @@ export default {
         // reveal all cells
       } else if (this.isEmptyCell(cell)) {
         // reveal selected cell and recursively reveal surrounding empty cells
+        console.log(cell);
+        // cell.hidden = false;
         this.revealCell(cell);
+        this.board[y][x] = cell;
+        // console.log(cell);
       }
-      // cell.hidden = true;
-      // this.board[y][x] = cell;
-      // console.log(this.board[y][x]);
+      this.$forceUpdate();
     },
     startGame() {
       this.setup();
@@ -101,6 +105,18 @@ export default {
     setup() {
       // Create an array inside an array to make a grid
       this.board = this.create2DArray();
+      // console.log(this.board);
+      // this.board = await this.getNewBoard();
+      // axios
+      //   .get(`/api/game/new?cols=${this.cols}&rows=${this.rows}`)
+      //   .then(res => {
+      //     this.board = this.setCells(res.data);
+      // res.data.map();
+      // console.log(this.board);
+      // });
+
+      // .then(response => (this.board = response.data));
+
       this.setEmpty();
       this.populateBombs();
       // this.board[0][1].value = 0;
@@ -109,7 +125,7 @@ export default {
       // this.board[0][2].icon = '🧑';
       // this.getSurroundingCells(this.board[1][2]);
       this.incSurroundingCells(this.bombedCells);
-      console.log(this.board);
+      // console.log(this.board);
     },
     populateBombs() {
       // Populate bombs ramdomly
@@ -149,7 +165,7 @@ export default {
       for (let y = 0; y < this.board.length; y++) {
         for (let x = 0; x < this.board[y].length; x++) {
           this.board[y][x] = new Cell({
-            hidden: false,
+            hidden: true,
             value: 0,
             icon: '',
             coords: {
@@ -157,6 +173,19 @@ export default {
               y,
             },
           });
+          // return mapped;
+          // console.log(this.board);
+          // for (let y = 0; y < this.board.length; y++) {
+          //   for (let x = 0; x < this.board[y].length; x++) {
+          //     this.board[y][x] = new Cell({
+          //       hidden: false,
+          //       value: 0,
+          //       icon: '',
+          //       coords: {
+          //         x,
+          //         y,
+          //       },
+          //     });
         }
       }
     },
@@ -224,9 +253,15 @@ export default {
 
       const cells = this.getSurroundingCells(cell);
       // console.log(Object.values(cells));
-      // get only those that are not bombs or numbers
+      // get only those that are not bombs
       Object.values(cells)
-        .filter(cell => cell && cell.value === 0 && cell.icon === '')
+        .filter(
+          cell =>
+            cell &&
+            cell.hidden === false &&
+            cell.value === 0 &&
+            cell.icon === ''
+        )
         .forEach(cell => {
           cell.hidden = false;
           this.board[y][x] = cell;
@@ -242,8 +277,10 @@ export default {
 body {
   margin: 40px;
 }
-/* .wrapper {
-} */
+.wrapper {
+  display: flex;
+  justify-content: center;
+}
 /* .grid {
   display: grid;
   grid-gap: 5px;
@@ -259,9 +296,8 @@ body {
   background-color: #fff;
   color: #444;
   cursor: pointer;
-  width: 25px;
-  height: 25px;
-  /* padding: 20px; */
+  width: 32px;
+  height: 32px;
   font-size: 150%;
 }
 .hidden {

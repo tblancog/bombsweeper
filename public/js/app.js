@@ -1941,6 +1941,8 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
 
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
@@ -2005,13 +2007,14 @@ var Cell = function Cell() {
   };
 };
 
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'MineSweeper',
   data: function data() {
     return {
       board: [],
-      rows: 8,
-      cols: 8,
+      rows: 10,
+      cols: 10,
       elements: {
         bombs: {
           qty: 4
@@ -2042,11 +2045,13 @@ var Cell = function Cell() {
         this.statusText = 'Boom!! You Lost'; // reveal all cells
       } else if (this.isEmptyCell(cell)) {
         // reveal selected cell and recursively reveal surrounding empty cells
-        this.revealCell(cell);
-      } // cell.hidden = true;
-      // this.board[y][x] = cell;
-      // console.log(this.board[y][x]);
+        console.log(cell); // cell.hidden = false;
 
+        this.revealCell(cell);
+        this.board[y][x] = cell; // console.log(cell);
+      }
+
+      this.$forceUpdate();
     },
     startGame: function startGame() {
       this.setup();
@@ -2054,7 +2059,17 @@ var Cell = function Cell() {
     },
     setup: function setup() {
       // Create an array inside an array to make a grid
-      this.board = this.create2DArray();
+      this.board = this.create2DArray(); // console.log(this.board);
+      // this.board = await this.getNewBoard();
+      // axios
+      //   .get(`/api/game/new?cols=${this.cols}&rows=${this.rows}`)
+      //   .then(res => {
+      //     this.board = this.setCells(res.data);
+      // res.data.map();
+      // console.log(this.board);
+      // });
+      // .then(response => (this.board = response.data));
+
       this.setEmpty();
       this.populateBombs(); // this.board[0][1].value = 0;
       // this.board[0][1].icon = '🙂';
@@ -2062,8 +2077,7 @@ var Cell = function Cell() {
       // this.board[0][2].icon = '🧑';
       // this.getSurroundingCells(this.board[1][2]);
 
-      this.incSurroundingCells(this.bombedCells);
-      console.log(this.board);
+      this.incSurroundingCells(this.bombedCells); // console.log(this.board);
     },
     populateBombs: function populateBombs() {
       // Populate bombs ramdomly
@@ -2106,14 +2120,26 @@ var Cell = function Cell() {
       for (var y = 0; y < this.board.length; y++) {
         for (var x = 0; x < this.board[y].length; x++) {
           this.board[y][x] = new Cell({
-            hidden: false,
+            hidden: true,
             value: 0,
             icon: '',
             coords: {
               x: x,
               y: y
             }
-          });
+          }); // return mapped;
+          // console.log(this.board);
+          // for (let y = 0; y < this.board.length; y++) {
+          //   for (let x = 0; x < this.board[y].length; x++) {
+          //     this.board[y][x] = new Cell({
+          //       hidden: false,
+          //       value: 0,
+          //       icon: '',
+          //       coords: {
+          //         x,
+          //         y,
+          //       },
+          //     });
         }
       }
     },
@@ -2192,10 +2218,10 @@ var Cell = function Cell() {
           x = _cell$coords3.x;
       this.board[y][x] = cell;
       var cells = this.getSurroundingCells(cell); // console.log(Object.values(cells));
-      // get only those that are not bombs or numbers
+      // get only those that are not bombs
 
       Object.values(cells).filter(function (cell) {
-        return cell && cell.value === 0 && cell.icon === '';
+        return cell && cell.hidden === false && cell.value === 0 && cell.icon === '';
       }).forEach(function (cell) {
         cell.hidden = false;
         _this2.board[y][x] = cell;
@@ -6750,7 +6776,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\nbody[data-v-7d03d8ab] {\n  margin: 40px;\n}\n/* .wrapper {\n} */\n/* .grid {\n  display: grid;\n  grid-gap: 5px;\n  background-color: #fff;\n  justify-items: center;\n  justify-content: center;\n} */\n.box[data-v-7d03d8ab] {\n  border: 1px solid black;\n  display: flex;\n  justify-content: center;\n  background-color: #fff;\n  color: #444;\n  cursor: pointer;\n  width: 25px;\n  height: 25px;\n  /* padding: 20px; */\n  font-size: 150%;\n}\n.hidden[data-v-7d03d8ab] {\n  background-color: #ddd;\n}\n", ""]);
+exports.push([module.i, "\nbody[data-v-7d03d8ab] {\n  margin: 40px;\n}\n.wrapper[data-v-7d03d8ab] {\n  display: flex;\n  justify-content: center;\n}\n/* .grid {\n  display: grid;\n  grid-gap: 5px;\n  background-color: #fff;\n  justify-items: center;\n  justify-content: center;\n} */\n.box[data-v-7d03d8ab] {\n  border: 1px solid black;\n  display: flex;\n  justify-content: center;\n  background-color: #fff;\n  color: #444;\n  cursor: pointer;\n  width: 32px;\n  height: 32px;\n  font-size: 150%;\n}\n.hidden[data-v-7d03d8ab] {\n  background-color: #ddd;\n}\n", ""]);
 
 // exports
 
@@ -50746,14 +50772,15 @@ __webpack_require__.r(__webpack_exports__);
 /*!*************************************************!*\
   !*** ./resources/js/components/MineSweeper.vue ***!
   \*************************************************/
-/*! exports provided: default */
+/*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _MineSweeper_vue_vue_type_template_id_7d03d8ab_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./MineSweeper.vue?vue&type=template&id=7d03d8ab&scoped=true& */ "./resources/js/components/MineSweeper.vue?vue&type=template&id=7d03d8ab&scoped=true&");
 /* harmony import */ var _MineSweeper_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./MineSweeper.vue?vue&type=script&lang=js& */ "./resources/js/components/MineSweeper.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _MineSweeper_vue_vue_type_style_index_0_id_7d03d8ab_lang_css_scoped_true___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./MineSweeper.vue?vue&type=style&index=0&id=7d03d8ab&lang=css&scoped=true& */ "./resources/js/components/MineSweeper.vue?vue&type=style&index=0&id=7d03d8ab&lang=css&scoped=true&");
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _MineSweeper_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _MineSweeper_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var _MineSweeper_vue_vue_type_style_index_0_id_7d03d8ab_lang_css_scoped_true___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./MineSweeper.vue?vue&type=style&index=0&id=7d03d8ab&lang=css&scoped=true& */ "./resources/js/components/MineSweeper.vue?vue&type=style&index=0&id=7d03d8ab&lang=css&scoped=true&");
 /* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
@@ -50785,7 +50812,7 @@ component.options.__file = "resources/js/components/MineSweeper.vue"
 /*!**************************************************************************!*\
   !*** ./resources/js/components/MineSweeper.vue?vue&type=script&lang=js& ***!
   \**************************************************************************/
-/*! exports provided: default */
+/*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";

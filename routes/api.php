@@ -28,7 +28,16 @@ Route::prefix('/game')->group( function() {
     $board[][] = [[]];
     for($y = 0; $y < $cols; $y++) {
       for($x = 0; $x < $rows; $x++) {
-        $board[$y][$x] = 0;  
+        $board[$y][$x] = [
+          'cellId'=> uniqid(),
+          'hidden'=> false,
+          'value'=> 0,
+          'icon'=> '',
+          'coords'=> [
+            'x'=> $x,
+            'y'=> $y
+          ]
+        ];  
       }
     }
     return $board;
