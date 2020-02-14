@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <div class="setup" v-if="!startedGame">
+    <div class="setup" v-if="!gameOver">
       <div class="input">
         <label for="cols">
           Cols:
@@ -32,7 +32,7 @@
           {{ cell.icon }}
         </div>
       </span>
-      <button @click="startedGame = false" class="btn">
+      <button @click="gameOver = false" class="btn">
         End game
       </button>
     </div>
@@ -64,7 +64,7 @@ export default {
           qty: 4,
         },
       },
-      startedGame: false,
+      gameOver: false,
       statusText: '',
     };
   },
@@ -84,25 +84,34 @@ export default {
     cellClicked(coords) {
       const { y, x } = coords;
       const cell = this.getCell(y, x);
+
+      // check if game has ended already
+      // if (!this.gameOver) {
+      //   return;
+      // }
       // change state of cell
       if (this.isCellABomb(cell)) {
         this.statusText = 'Boom!! You Lost';
         // reveal all cells
+        console.log(cell);
+        this.revealAll();
       } else if (this.isEmptyCell(cell)) {
         // reveal selected cell and recursively reveal surrounding empty cells
-        // console.log(cell);
-        // cell.hidden = false;
         this.revealCell(cell);
         // this.board[y][x] = cell;
         // console.log(cell);
       } else {
         // clicked a cell with value
+        cell.hidden = false;
+        cell.icon = cell.value;
+        this.board[y][x] = cell;
       }
       this.$forceUpdate();
     },
     startGame() {
       this.setup();
-      this.startedGame = true;
+      this.gameOver = true;
+      this.statusText = '';
     },
     setup() {
       // Create an array inside an array to make a grid
@@ -262,8 +271,26 @@ export default {
           cell.hidden = false;
           this.board[y][x] = cell;
           console.log('Revealed cells: ', this.board[y][x]);
-          // this.revealCell(cell);
+          this.revealCell(cell);
         });
+    },
+    revealAll() {
+      let board = this.board;
+      for (let y = 0; y < board.length; y++) {
+        for (let x = 0; x < board.length; x++) {
+          const cell = board[y][x];
+          cell.hidden = false;
+          cell.icon = cell.value;
+          if (cell.value === 0) {
+            cell.icon = '';
+          }
+          if (cell.value === null) {
+            cell.icon = '💣';
+          }
+          board[y][x] = cell;
+        }
+      }
+      this.board = board;
     },
   },
 };

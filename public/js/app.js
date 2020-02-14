@@ -2020,7 +2020,7 @@ var Cell = function Cell() {
           qty: 4
         }
       },
-      startedGame: false,
+      gameOver: false,
       statusText: ''
     };
   },
@@ -2039,24 +2039,34 @@ var Cell = function Cell() {
     cellClicked: function cellClicked(coords) {
       var y = coords.y,
           x = coords.x;
-      var cell = this.getCell(y, x); // change state of cell
+      var cell = this.getCell(y, x); // check if game has ended already
+      // if (!this.gameOver) {
+      //   return;
+      // }
+      // change state of cell
 
       if (this.isCellABomb(cell)) {
         this.statusText = 'Boom!! You Lost'; // reveal all cells
+
+        console.log(cell);
+        this.revealAll();
       } else if (this.isEmptyCell(cell)) {
         // reveal selected cell and recursively reveal surrounding empty cells
-        // console.log(cell);
-        // cell.hidden = false;
         this.revealCell(cell); // this.board[y][x] = cell;
         // console.log(cell);
-      } else {// clicked a cell with value
-        }
+      } else {
+        // clicked a cell with value
+        cell.hidden = false;
+        cell.icon = cell.value;
+        this.board[y][x] = cell;
+      }
 
       this.$forceUpdate();
     },
     startGame: function startGame() {
       this.setup();
-      this.startedGame = true;
+      this.gameOver = true;
+      this.statusText = '';
     },
     setup: function setup() {
       // Create an array inside an array to make a grid
@@ -2226,8 +2236,33 @@ var Cell = function Cell() {
       }).forEach(function (cell) {
         cell.hidden = false;
         _this2.board[y][x] = cell;
-        console.log('Revealed cells: ', _this2.board[y][x]); // this.revealCell(cell);
+        console.log('Revealed cells: ', _this2.board[y][x]);
+
+        _this2.revealCell(cell);
       });
+    },
+    revealAll: function revealAll() {
+      var board = this.board;
+
+      for (var y = 0; y < board.length; y++) {
+        for (var x = 0; x < board.length; x++) {
+          var cell = board[y][x];
+          cell.hidden = false;
+          cell.icon = cell.value;
+
+          if (cell.value === 0) {
+            cell.icon = '';
+          }
+
+          if (cell.value === null) {
+            cell.icon = '💣';
+          }
+
+          board[y][x] = cell;
+        }
+      }
+
+      this.board = board;
     }
   }
 });
@@ -38297,7 +38332,7 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "wrapper" }, [
-    !_vm.startedGame
+    !_vm.gameOver
       ? _c("div", { staticClass: "setup" }, [
           _c("div", { staticClass: "input" }, [
             _c("label", { attrs: { for: "cols" } }, [
@@ -38441,7 +38476,7 @@ var render = function() {
                 staticClass: "btn",
                 on: {
                   click: function($event) {
-                    _vm.startedGame = false
+                    _vm.gameOver = false
                   }
                 }
               },
