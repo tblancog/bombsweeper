@@ -1993,6 +1993,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 //
 //
 //
+//
 var Cell = function Cell() {
   var cell = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
@@ -2001,6 +2002,7 @@ var Cell = function Cell() {
   this.hidden = cell.hidden;
   this.value = cell.value;
   this.icon = cell.icon;
+  this.flaged = cell.flaged;
   this.coords = {
     x: cell.coords.x,
     y: cell.coords.y
@@ -2063,6 +2065,22 @@ var Cell = function Cell() {
 
       this.$forceUpdate();
     },
+    cellRightClicked: function cellRightClicked(e, coords) {
+      var y = coords.y,
+          x = coords.x;
+      var cell = this.getCell(y, x);
+
+      if (cell.flagged) {
+        cell.icon = '';
+        cell.flagged = false;
+      } else {
+        cell.icon = '🚩';
+        cell.flagged = true;
+      }
+
+      this.board[y][x] = cell;
+      this.$forceUpdate();
+    },
     startGame: function startGame() {
       this.setup();
       this.gameOver = true;
@@ -2108,6 +2126,7 @@ var Cell = function Cell() {
             hidden: true,
             value: null,
             icon: '',
+            flagged: false,
             coords: {
               x: randRow,
               y: randCol
@@ -2134,6 +2153,7 @@ var Cell = function Cell() {
             hidden: true,
             value: 0,
             icon: '',
+            flagged: false,
             coords: {
               x: x,
               y: y
@@ -6810,7 +6830,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\nbody[data-v-7d03d8ab] {\n  margin: 40px;\n}\n.wrapper[data-v-7d03d8ab] {\n  display: flex;\n  justify-content: center;\n}\n/* .grid {\n  display: grid;\n  grid-gap: 5px;\n  background-color: #fff;\n  justify-items: center;\n  justify-content: center;\n} */\n.box[data-v-7d03d8ab] {\n  border: 1px solid black;\n  display: flex;\n  justify-content: center;\n  background-color: #fff;\n  color: #444;\n  cursor: pointer;\n  width: 32px;\n  height: 32px;\n  font-size: 150%;\n}\n.hidden[data-v-7d03d8ab] {\n  background-color: #ddd;\n}\n", ""]);
+exports.push([module.i, "\nbody[data-v-7d03d8ab] {\n  margin: 40px;\n}\n.wrapper[data-v-7d03d8ab] {\n  display: flex;\n  justify-content: center;\n}\n.box[data-v-7d03d8ab] {\n  border: 1px solid black;\n  display: flex;\n  justify-content: center;\n  background-color: #fff;\n  color: #444;\n  cursor: pointer;\n  width: 32px;\n  height: 32px;\n  font-size: 150%;\n}\n.hidden[data-v-7d03d8ab] {\n  background-color: #ddd;\n}\n", ""]);
 
 // exports
 
@@ -38458,6 +38478,10 @@ var render = function() {
                       on: {
                         click: function($event) {
                           return _vm.cellClicked({ x: x, y: y })
+                        },
+                        contextmenu: function($event) {
+                          $event.preventDefault()
+                          return _vm.cellRightClicked($event, { x: x, y: y })
                         }
                       }
                     },

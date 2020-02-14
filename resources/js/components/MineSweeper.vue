@@ -28,6 +28,7 @@
           v-for="(cell, x) in col"
           :key="x"
           @click="cellClicked({ x, y })"
+          @contextmenu.prevent="cellRightClicked($event, { x, y })"
         >
           {{ cell.icon }}
         </div>
@@ -44,6 +45,7 @@ class Cell {
     this.hidden = cell.hidden;
     this.value = cell.value;
     this.icon = cell.icon;
+    this.flaged = cell.flaged;
     this.coords = {
       x: cell.coords.x,
       y: cell.coords.y,
@@ -108,6 +110,19 @@ export default {
       }
       this.$forceUpdate();
     },
+    cellRightClicked(e, coords) {
+      const { y, x } = coords;
+      const cell = this.getCell(y, x);
+      if (cell.flagged) {
+        cell.icon = '';
+        cell.flagged = false;
+      } else {
+        cell.icon = '🚩';
+        cell.flagged = true;
+      }
+      this.board[y][x] = cell;
+      this.$forceUpdate();
+    },
     startGame() {
       this.setup();
       this.gameOver = true;
@@ -155,6 +170,7 @@ export default {
             hidden: true,
             value: null,
             icon: '',
+            flagged: false,
             coords: {
               x: randRow,
               y: randCol,
@@ -179,6 +195,7 @@ export default {
             hidden: true,
             value: 0,
             icon: '',
+            flagged: false,
             coords: {
               x,
               y,
@@ -302,13 +319,6 @@ body {
   display: flex;
   justify-content: center;
 }
-/* .grid {
-  display: grid;
-  grid-gap: 5px;
-  background-color: #fff;
-  justify-items: center;
-  justify-content: center;
-} */
 
 .box {
   border: 1px solid black;
