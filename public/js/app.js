@@ -2019,7 +2019,7 @@ var Cell = function Cell() {
       cols: 10,
       elements: {
         bombs: {
-          qty: 4
+          qty: 10
         }
       },
       gameOver: false,
@@ -2041,11 +2041,7 @@ var Cell = function Cell() {
     cellClicked: function cellClicked(coords) {
       var y = coords.y,
           x = coords.x;
-      var cell = this.getCell(y, x); // check if game has ended already
-      // if (!this.gameOver) {
-      //   return;
-      // }
-      // change state of cell
+      var cell = this.getCell(y, x); // change state of cell
 
       if (this.isCellABomb(cell)) {
         this.statusText = 'Boom!! You Lost'; // reveal all cells
@@ -2054,8 +2050,7 @@ var Cell = function Cell() {
         this.revealAll();
       } else if (this.isEmptyCell(cell)) {
         // reveal selected cell and recursively reveal surrounding empty cells
-        this.revealCell(cell); // this.board[y][x] = cell;
-        // console.log(cell);
+        this.revealCell(cell);
       } else {
         // clicked a cell with value
         cell.hidden = false;
@@ -2088,25 +2083,10 @@ var Cell = function Cell() {
     },
     setup: function setup() {
       // Create an array inside an array to make a grid
-      this.board = this.create2DArray(); // console.log(this.board);
-      // this.board = await this.getNewBoard();
-      // axios
-      //   .get(`/api/game/new?cols=${this.cols}&rows=${this.rows}`)
-      //   .then(res => {
-      //     this.board = this.setCells(res.data);
-      // res.data.map();
-      // console.log(this.board);
-      // });
-      // .then(response => (this.board = response.data));
-
+      this.board = this.create2DArray();
       this.setEmpty();
-      this.populateBombs(); // this.board[0][1].value = 0;
-      // this.board[0][1].icon = '🙂';
-      // this.board[0][2].value = 0;
-      // this.board[0][2].icon = '🧑';
-      // this.getSurroundingCells(this.board[1][2]);
-
-      this.incSurroundingCells(this.bombedCells); // console.log(this.board);
+      this.populateBombs();
+      this.incSurroundingCells(this.bombedCells);
     },
     populateBombs: function populateBombs() {
       // Populate bombs ramdomly
@@ -2114,9 +2094,7 @@ var Cell = function Cell() {
 
       do {
         var randCol = this.random(0, this.cols);
-        var randRow = this.random(0, this.rows); // const randCol = 0;
-        // const randRow = 3;
-        // Validate if bomb has not been placed already
+        var randRow = this.random(0, this.rows); // Validate if bomb has not been placed already
 
         var currentCell = this.board[randCol][randRow];
 
@@ -2158,19 +2136,7 @@ var Cell = function Cell() {
               x: x,
               y: y
             }
-          }); // return mapped;
-          // console.log(this.board);
-          // for (let y = 0; y < this.board.length; y++) {
-          //   for (let x = 0; x < this.board[y].length; x++) {
-          //     this.board[y][x] = new Cell({
-          //       hidden: false,
-          //       value: 0,
-          //       icon: '',
-          //       coords: {
-          //         x,
-          //         y,
-          //       },
-          //     });
+          });
         }
       }
     },
@@ -2197,7 +2163,6 @@ var Cell = function Cell() {
     incSurroundingCells: function incSurroundingCells(arrayOfCells) {
       var _this = this;
 
-      // console.log(arrayOfCells);
       // This will increment by one the value of every surrounding cell
       arrayOfCells.forEach(function (cell) {
         var cells = _this.getSurroundingCells(cell); // Increment only sorrounding cells if they're neither null
@@ -2246,8 +2211,7 @@ var Cell = function Cell() {
           y = _cell$coords3.y,
           x = _cell$coords3.x;
       this.board[y][x] = cell;
-      var cells = this.getSurroundingCells(cell); // console.log(Object.values(cells));
-      // get only those that are not bombs
+      var cells = this.getSurroundingCells(cell); // get only those that are not bombs
 
       Object.values(cells).filter(function (cell) {
         return cell && cell.hidden === true && cell.value === 0;

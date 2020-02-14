@@ -63,7 +63,7 @@ export default {
       cols: 10,
       elements: {
         bombs: {
-          qty: 4,
+          qty: 10,
         },
       },
       gameOver: false,
@@ -87,10 +87,6 @@ export default {
       const { y, x } = coords;
       const cell = this.getCell(y, x);
 
-      // check if game has ended already
-      // if (!this.gameOver) {
-      //   return;
-      // }
       // change state of cell
       if (this.isCellABomb(cell)) {
         this.statusText = 'Boom!! You Lost';
@@ -100,8 +96,6 @@ export default {
       } else if (this.isEmptyCell(cell)) {
         // reveal selected cell and recursively reveal surrounding empty cells
         this.revealCell(cell);
-        // this.board[y][x] = cell;
-        // console.log(cell);
       } else {
         // clicked a cell with value
         cell.hidden = false;
@@ -131,27 +125,10 @@ export default {
     setup() {
       // Create an array inside an array to make a grid
       this.board = this.create2DArray();
-      // console.log(this.board);
-      // this.board = await this.getNewBoard();
-      // axios
-      //   .get(`/api/game/new?cols=${this.cols}&rows=${this.rows}`)
-      //   .then(res => {
-      //     this.board = this.setCells(res.data);
-      // res.data.map();
-      // console.log(this.board);
-      // });
-
-      // .then(response => (this.board = response.data));
 
       this.setEmpty();
       this.populateBombs();
-      // this.board[0][1].value = 0;
-      // this.board[0][1].icon = '🙂';
-      // this.board[0][2].value = 0;
-      // this.board[0][2].icon = '🧑';
-      // this.getSurroundingCells(this.board[1][2]);
       this.incSurroundingCells(this.bombedCells);
-      // console.log(this.board);
     },
     populateBombs() {
       // Populate bombs ramdomly
@@ -159,8 +136,6 @@ export default {
       do {
         const randCol = this.random(0, this.cols);
         const randRow = this.random(0, this.rows);
-        // const randCol = 0;
-        // const randRow = 3;
 
         // Validate if bomb has not been placed already
         let currentCell = this.board[randCol][randRow];
@@ -201,19 +176,6 @@ export default {
               y,
             },
           });
-          // return mapped;
-          // console.log(this.board);
-          // for (let y = 0; y < this.board.length; y++) {
-          //   for (let x = 0; x < this.board[y].length; x++) {
-          //     this.board[y][x] = new Cell({
-          //       hidden: false,
-          //       value: 0,
-          //       icon: '',
-          //       coords: {
-          //         x,
-          //         y,
-          //       },
-          //     });
         }
       }
     },
@@ -236,7 +198,6 @@ export default {
       };
     },
     incSurroundingCells(arrayOfCells) {
-      // console.log(arrayOfCells);
       // This will increment by one the value of every surrounding cell
       arrayOfCells.forEach(cell => {
         const cells = this.getSurroundingCells(cell);
@@ -278,7 +239,6 @@ export default {
       this.board[y][x] = cell;
 
       const cells = this.getSurroundingCells(cell);
-      // console.log(Object.values(cells));
       // get only those that are not bombs
       Object.values(cells)
         .filter(cell => cell && cell.hidden === true && cell.value === 0)
