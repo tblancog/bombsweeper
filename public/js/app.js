@@ -2045,11 +2045,12 @@ var Cell = function Cell() {
         this.statusText = 'Boom!! You Lost'; // reveal all cells
       } else if (this.isEmptyCell(cell)) {
         // reveal selected cell and recursively reveal surrounding empty cells
-        console.log(cell); // cell.hidden = false;
-
-        this.revealCell(cell);
-        this.board[y][x] = cell; // console.log(cell);
-      }
+        // console.log(cell);
+        // cell.hidden = false;
+        this.revealCell(cell); // this.board[y][x] = cell;
+        // console.log(cell);
+      } else {// clicked a cell with value
+        }
 
       this.$forceUpdate();
     },
@@ -2179,8 +2180,8 @@ var Cell = function Cell() {
                 y = _cell$coords2.y,
                 x = _cell$coords2.x;
             var newValue = cell.value + 1;
-            cell.value = newValue;
-            cell.icon = newValue;
+            cell.value = newValue; // cell.icon = newValue;
+
             _this.board[y][x] = cell;
           }
         });
@@ -2221,11 +2222,11 @@ var Cell = function Cell() {
       // get only those that are not bombs
 
       Object.values(cells).filter(function (cell) {
-        return cell && cell.hidden === false && cell.value === 0 && cell.icon === '';
+        return cell && cell.hidden === true && cell.value === 0;
       }).forEach(function (cell) {
         cell.hidden = false;
         _this2.board[y][x] = cell;
-        console.log(_this2.board[y][x]); // this.revealCell(cell);
+        console.log('Revealed cells: ', _this2.board[y][x]); // this.revealCell(cell);
       });
     }
   }

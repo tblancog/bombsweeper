@@ -90,11 +90,13 @@ export default {
         // reveal all cells
       } else if (this.isEmptyCell(cell)) {
         // reveal selected cell and recursively reveal surrounding empty cells
-        console.log(cell);
+        // console.log(cell);
         // cell.hidden = false;
         this.revealCell(cell);
-        this.board[y][x] = cell;
+        // this.board[y][x] = cell;
         // console.log(cell);
+      } else {
+        // clicked a cell with value
       }
       this.$forceUpdate();
     },
@@ -219,7 +221,7 @@ export default {
             const { y, x } = cell.coords;
             const newValue = cell.value + 1;
             cell.value = newValue;
-            cell.icon = newValue;
+            // cell.icon = newValue;
             this.board[y][x] = cell;
           }
         });
@@ -255,17 +257,11 @@ export default {
       // console.log(Object.values(cells));
       // get only those that are not bombs
       Object.values(cells)
-        .filter(
-          cell =>
-            cell &&
-            cell.hidden === false &&
-            cell.value === 0 &&
-            cell.icon === ''
-        )
+        .filter(cell => cell && cell.hidden === true && cell.value === 0)
         .forEach(cell => {
           cell.hidden = false;
           this.board[y][x] = cell;
-          console.log(this.board[y][x]);
+          console.log('Revealed cells: ', this.board[y][x]);
           // this.revealCell(cell);
         });
     },
