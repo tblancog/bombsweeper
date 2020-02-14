@@ -87,9 +87,10 @@
                 <div>
                   <a href="{{ route('login') }}">Log in</a> as:
                 </div>
-                <div>
-                 User: <strong>johndoe@email.com</strong>
-                 Password:<strong>johndoe@email.com</strong> 
+                <div class="text-left">
+                  User: <strong>johndoe@email.com</strong>
+                <br/>
+                  Password:<strong>johndoe@email.com</strong> 
                 </div>
                 <br/>
                   - OR -
