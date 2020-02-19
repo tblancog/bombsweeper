@@ -1,6 +1,6 @@
 # BombSweeper challenge app
 
-## Overwiew
+## Overview
 
 This was a challenging project, I could cover the most of the requirements being asked according the time I had to solve them. I called this app BombSweeper to make it a little more original than the classic game for windows.
 I wanted to focus first in frontend features that could show something working and then backend features.
@@ -8,7 +8,7 @@ I wanted to focus first in frontend features that could show something working a
 ## Walktrough
 
 I didn't know how to play Minesweeper so I had familiarize first with it in order to understand how to code it.
-This was more a frontend project than backend, I used Vuejs framework but I could used just vanilla javascript and the result would be the same, also I wanted to use some features like two way binding and computed properties that might come handy. For backend I used Laravel framework and sqlite as database to store users.
+This was more a frontend project than backend, I used Vuejs framework but I could have used just vanilla javascript and the result would be the same, also I wanted to use some features like two way binding and computed properties that might come handy. For backend I used Laravel framework and sqlite as database to store users.
 
 ## Important decisions
 
