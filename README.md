@@ -21,7 +21,7 @@ This was more a frontend project than backend, I used Vuejs framework but I coul
 
 - Deploy the app for heroku, I got some 500 erros and I couldn't see any logs with the detail of the error.
 
-# Setup
+## Setup
 
 ```
 composer install
